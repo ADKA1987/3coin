@@ -29,14 +29,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Button getMyCoin = findViewById(R.id.getMyCoin);
         final EditText personalId= findViewById(R.id.personal_id);
-        final TextView resutltext = findViewById(R.id.textC3oins);
-        final TextView expiryDate = findViewById(R.id.expiryDate);
         getMyCoin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
                     getCoins(personalId.getText().toString());
-
 
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -53,24 +50,25 @@ public class MainActivity extends AppCompatActivity {
         My3CoinResponse my3CoinResponse = null;
         if(null == personalId || personalId.isEmpty()) {
             Toast.makeText(this, "Personal number cannot be empty", Toast.LENGTH_LONG).show();
-
+            return;
         }
 
          Get3CoinRequest get3CoinRequest = new Get3CoinRequest();
         try {
-            my3CoinResponse =  get3CoinRequest.execute().get();
+            my3CoinResponse =  get3CoinRequest.execute(personalId).get();
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         if(null!=my3CoinResponse){
-            //resutltext.setText(my3CoinResponse.getCoins());
-            //expiryDate.setText(my3CoinResponse.getExpiryDate());
-        } else {
-           // resutltext.setText("No Coins were found");
-           // expiryDate.setText(",,,,");
             Intent intent = new Intent(this, tab_activity.class);
+            intent.putExtra("my3CoinResponse",my3CoinResponse);
+            startActivity(intent);
+        } else {
+            Toast.makeText(this, "Please pay your invoice to get 3Coins.", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(this, tab_activity.class);
+            intent.putExtra("my3CoinResponse",my3CoinResponse);
             startActivity(intent);
         }
         //return my3CoinResponse;

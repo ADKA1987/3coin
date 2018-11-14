@@ -1,6 +1,8 @@
 package se.tre.a3coin.Domain;
 
-public class My3CoinResponse {
+import java.io.Serializable;
+
+public class My3CoinResponse implements Serializable {
     private String coins;
     private String expiryDate;
 
