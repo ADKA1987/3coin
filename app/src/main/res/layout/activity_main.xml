@@ -56,6 +56,9 @@
             android:text="3Coins" />
 
     </LinearLayout>
+
+    
+
 </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>
