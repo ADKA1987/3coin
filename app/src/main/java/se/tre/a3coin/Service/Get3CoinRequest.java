@@ -15,7 +15,7 @@ import java.net.URL;
 import se.tre.a3coin.Domain.My3CoinResponse;
 
 public class Get3CoinRequest  extends AsyncTask<String, String , My3CoinResponse > {
-    private String url = "x13824azz.nextrel.tre.se:8123/get3Coin/";
+    private String url = "http://x13824azz.nextrel.tre.se:8123/get3Coin/";
     public Get3CoinRequest(){
 
     }
