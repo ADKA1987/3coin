@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
         final EditText personalId= findViewById(R.id.personal_id);
         final TextView resutltext = findViewById(R.id.textC3oins);
         final TextView expiryDate = findViewById(R.id.expiryDate);
+        final TextView c3oins = findViewById(R.id.C3oins);
         getMyCoin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -33,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
                     if(null!=my3CoinResponse){
                         resutltext.setText(my3CoinResponse.getCoins());
                         expiryDate.setText(my3CoinResponse.getExpiryDate());
+                        c3oins.setVisibility(View.VISIBLE);
+
                     } else {
                         resutltext.setText("No Coins were found");
                         expiryDate.setText(",,,,");
