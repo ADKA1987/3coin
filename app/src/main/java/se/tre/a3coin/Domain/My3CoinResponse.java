@@ -1,14 +1,18 @@
 package se.tre.a3coin.Domain;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class My3CoinResponse implements Serializable {
     private String coins;
     private String expiryDate;
-
-    public  My3CoinResponse(String coins, String expiryDate){
-        this.coins = coins;
+    private  List<Credit> creditHistoryList;
+    private  List<Usage> usageList;
+    private  List<Product> productList;
+public  My3CoinResponse(String available3Coins, String expiryDate){
+        this.coins = available3Coins;
         this.expiryDate = expiryDate;
+
     }
 
     public String getCoins() {
@@ -19,11 +23,26 @@ public class My3CoinResponse implements Serializable {
         return expiryDate;
     }
 
+    public List<Credit> getCreditHistoryList() {
+        return creditHistoryList;
+    }
+
+    public List<Usage> getUsageList() {
+        return usageList;
+    }
+
+    public List<Product> getProductList() {
+        return productList;
+    }
+
     @Override
     public String toString() {
         return "My3CoinResponse{" +
                 "coins='" + coins + '\'' +
                 ", expiryDate='" + expiryDate + '\'' +
+                ", creditHistoryList=" + creditHistoryList +
+                ", usageList=" + usageList +
+                ", productList=" + productList +
                 '}';
     }
 }

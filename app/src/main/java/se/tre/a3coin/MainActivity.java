@@ -1,26 +1,18 @@
 package se.tre.a3coin;
 
 import android.content.Intent;
-import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
-import android.view.Menu;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
 import se.tre.a3coin.Domain.My3CoinResponse;
 import se.tre.a3coin.Service.Get3CoinRequest;
-import se.tre.a3coin.Service.PagerAdapter;
 
 public class MainActivity extends AppCompatActivity {
     @Override
@@ -61,14 +53,11 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         if(null!=my3CoinResponse){
-            Intent intent = new Intent(this, tab_activity.class);
+            Intent intent = new Intent(this, Main2Activity.class);
             intent.putExtra("my3CoinResponse",my3CoinResponse);
             startActivity(intent);
         } else {
             Toast.makeText(this, "Please pay your invoice to get 3Coins.", Toast.LENGTH_LONG).show();
-            Intent intent = new Intent(this, tab_activity.class);
-            intent.putExtra("my3CoinResponse",my3CoinResponse);
-            startActivity(intent);
         }
         //return my3CoinResponse;
     }

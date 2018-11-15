@@ -11,11 +11,15 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 
+import se.tre.a3coin.Domain.Credit;
 import se.tre.a3coin.Domain.My3CoinResponse;
+import se.tre.a3coin.Domain.Product;
+import se.tre.a3coin.Domain.Usage;
 
 public class Get3CoinRequest  extends AsyncTask<String, String , My3CoinResponse > {
-    private String url = "http://x13824azz.nextrel.tre.se:8123/get3Coin/";
+    private String url = "http://x13824azz.nextrel.tre.se:8123/3labs/3coins/getPsftInfo/se/consumer/198608160563";
     public Get3CoinRequest(){
 
     }
@@ -26,7 +30,7 @@ public class Get3CoinRequest  extends AsyncTask<String, String , My3CoinResponse
         My3CoinResponse my3CoinResponse = null;
         HttpURLConnection urlConnection = null;
         try {
-            regUrl = new URL(url+personalId);
+            regUrl = new URL(url);
             urlConnection = (HttpURLConnection) regUrl.openConnection();
             urlConnection.setRequestMethod("GET");
             //Log.v("UrlConnection",  urlConnection.getContent().toString());
@@ -56,10 +60,13 @@ public class Get3CoinRequest  extends AsyncTask<String, String , My3CoinResponse
         try {
 
             JSONObject jObj = new JSONObject(responseString);
-            String coins = jObj.getString("coins");
+            String coins = jObj.getString("available3Coins");
             String expiryDate = jObj.getString("expiryDate");
+           /* List<Credit> creditHistoryList = (List<Credit>) jObj.getJSONArray("creditHistoryList");
+            List<Usage> UsageList = (List<Usage>)  jObj.getJSONArray("usageList");
+            List<Product> productList = (List<Product>)  jObj.getJSONArray("productList");*/
             my3CoinResponse = new My3CoinResponse(coins, expiryDate);
-            Log.v("My3Coin", "coins "+ coins + ", expiryDate "+ expiryDate);
+            Log.v("My3Coin", "available3Coins "+ coins + ", expiryDate "+ expiryDate);
         } catch (JSONException e) {
             Log.e("My3Coin", "unexpected JSON exception", e);
         }
