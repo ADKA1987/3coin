@@ -19,7 +19,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Button getMyCoin = findViewById(R.id.getMyCoin);
+
         final EditText personalId= findViewById(R.id.personal_id);
         getMyCoin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -35,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
     private void getCoins(String personalId) throws IOException {
 
 
@@ -45,19 +48,22 @@ public class MainActivity extends AppCompatActivity {
         }
 
          Get3CoinRequest get3CoinRequest = new Get3CoinRequest();
-        try {
+        /*try {
             my3CoinResponse =  get3CoinRequest.execute(personalId).get();
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
+        }*/
         if(null!=my3CoinResponse){
             Intent intent = new Intent(this, Main2Activity.class);
             intent.putExtra("my3CoinResponse",my3CoinResponse);
             startActivity(intent);
         } else {
             Toast.makeText(this, "Please pay your invoice to get 3Coins.", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(this, Main2Activity.class);
+            intent.putExtra("my3CoinResponse",my3CoinResponse);
+            startActivity(intent);
         }
         //return my3CoinResponse;
     }

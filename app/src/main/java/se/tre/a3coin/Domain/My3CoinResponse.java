@@ -9,10 +9,11 @@ public class My3CoinResponse implements Serializable {
     private  List<Credit> creditHistoryList;
     private  List<Usage> usageList;
     private  List<Product> productList;
-public  My3CoinResponse(String available3Coins, String expiryDate){
+    private String[] personalId;
+    public  My3CoinResponse(String available3Coins, String expiryDate, String[] personalId){
         this.coins = available3Coins;
         this.expiryDate = expiryDate;
-
+        this.personalId= personalId;
     }
 
     public String getCoins() {

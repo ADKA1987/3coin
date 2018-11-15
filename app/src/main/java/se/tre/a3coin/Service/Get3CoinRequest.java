@@ -39,7 +39,7 @@ public class Get3CoinRequest  extends AsyncTask<String, String , My3CoinResponse
             if(responseCode == HttpURLConnection.HTTP_OK){
                 String responseString = readStream(urlConnection.getInputStream());
                 Log.v("CatalogClient-Response", responseString);
-                my3CoinResponse = parsemy3CoinResponse(responseString);
+                my3CoinResponse = parsemy3CoinResponse(responseString,personalId);
             }else{
                 Log.v("CatalogClient", "Response code:"+ responseCode);
                 Log.v("CatalogClient", "Response message:"+ responseMessage);
@@ -55,7 +55,7 @@ public class Get3CoinRequest  extends AsyncTask<String, String , My3CoinResponse
         return my3CoinResponse;
     }
 
-    private My3CoinResponse parsemy3CoinResponse(String responseString) {
+    private My3CoinResponse parsemy3CoinResponse(String responseString, String[] personalid) {
         My3CoinResponse my3CoinResponse= null;
         try {
 
@@ -65,7 +65,7 @@ public class Get3CoinRequest  extends AsyncTask<String, String , My3CoinResponse
            /* List<Credit> creditHistoryList = (List<Credit>) jObj.getJSONArray("creditHistoryList");
             List<Usage> UsageList = (List<Usage>)  jObj.getJSONArray("usageList");
             List<Product> productList = (List<Product>)  jObj.getJSONArray("productList");*/
-            my3CoinResponse = new My3CoinResponse(coins, expiryDate);
+            my3CoinResponse = new My3CoinResponse(coins, expiryDate,personalid);
             Log.v("My3Coin", "available3Coins "+ coins + ", expiryDate "+ expiryDate);
         } catch (JSONException e) {
             Log.e("My3Coin", "unexpected JSON exception", e);
