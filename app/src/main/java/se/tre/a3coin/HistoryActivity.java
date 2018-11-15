@@ -30,7 +30,7 @@ import se.tre.a3coin.Domain.My3CoinResponse;
 public class HistoryActivity extends AppCompatActivity {
     private TableLayout mTableLayout;
     ProgressDialog mProgressBar;
-    Credit credit;
+    Credit credit,credit2;
     List<Credit> creditList = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,9 +38,40 @@ public class HistoryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_history);
         Intent intnet = getIntent();
 
-        CreditHistoryList creditHistoryList = (CreditHistoryList) intnet.getSerializableExtra("creditHistoryList");
+        //CreditHistoryList creditHistoryList = (CreditHistoryList) intnet.getSerializableExtra("creditHistoryList");
         credit = new Credit("2973", "Sales", "1000", "2018-11-12", "3Coins", "2099-12-31");
+        credit2 = new Credit("2974", "Sales", "5000", "2018-11-12", "3Coins", "2099-12-31");
         creditList.add(credit);
+        creditList.add(credit2);
+        creditList.add(credit2);
+        creditList.add(credit2);
+        creditList.add(credit2);
+        creditList.add(credit2);
+        creditList.add(credit2);
+        creditList.add(credit2);
+        creditList.add(credit2);
+        creditList.add(credit2);
+        creditList.add(credit2);
+        creditList.add(credit2);
+        creditList.add(credit2);
+        creditList.add(credit2);
+        creditList.add(credit2);
+        creditList.add(credit2);
+        creditList.add(credit2);
+        creditList.add(credit2);
+        creditList.add(credit2);
+        creditList.add(credit2);
+        creditList.add(credit2);
+        creditList.add(credit2);
+        creditList.add(credit2);
+        creditList.add(credit2);
+        creditList.add(credit2);
+        creditList.add(credit2);
+        creditList.add(credit2);
+        creditList.add(credit2);
+        creditList.add(credit2);
+        creditList.add(credit2);
+
         mProgressBar = new ProgressDialog(this);
 
         mTableLayout = (TableLayout) findViewById(R.id.main_table);
@@ -183,7 +214,7 @@ public class HistoryActivity extends AppCompatActivity {
 
             tv2b.setGravity(Gravity.LEFT);
 
-            tv2b.setPadding(5, 15, 0, 15);
+            tv2b.setPadding(0, 10, 0, 0);
             if (i == -1) {
                 tv2b.setText("AddedBy");
                 tv2b.setBackgroundColor(Color.parseColor("#f7f7f7"));
@@ -196,7 +227,7 @@ public class HistoryActivity extends AppCompatActivity {
 
             final LinearLayout layAmounts = new LinearLayout(this);
             layAmounts.setOrientation(LinearLayout.VERTICAL);
-            layAmounts.setGravity(Gravity.RIGHT);
+            layAmounts.setGravity(Gravity.TOP);
             layAmounts.setPadding(0, 10, 0, 10);
             layAmounts.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT,
                     TableRow.LayoutParams.MATCH_PARENT));
