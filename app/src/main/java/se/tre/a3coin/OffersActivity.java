@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -17,22 +18,21 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 
-import se.tre.a3coin.Domain.Credit;
-import se.tre.a3coin.Domain.CreditHistoryList;
-import se.tre.a3coin.Domain.Product;
-import se.tre.a3coin.Domain.ProductsOffersList;
+import se.tre.a3coin.Domain.My3CoinResponse;
+import se.tre.a3coin.Domain.ProductList;
+import se.tre.a3coin.Domain.ProductListResponse;
 import se.tre.a3coin.Domain.UseCoinsInNextInvoice;
+import se.tre.a3coin.Service.Get3CoinRequest;
 import se.tre.a3coin.Service.SetCoinsNumber;
 
 public class OffersActivity extends AppCompatActivity {
     private TableLayout mTableLayout;
     ProgressDialog mProgressBar;
-    Product product;
     String personalId;
-    List<Product> productList = new ArrayList<>();
+    ProductListResponse productLists ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,56 +40,22 @@ public class OffersActivity extends AppCompatActivity {
         setContentView(R.layout.activity_offers);
         Intent intnet = getIntent();
         personalId= (String) intnet.getSerializableExtra("personalId");
+        productLists= (ProductListResponse) intnet.getSerializableExtra("offersLists");
         final EditText coinsAmount = findViewById(R.id.coins_amount);
 
         final Button sendCoinsBtn = findViewById(R.id.sendCoins);
         sendCoinsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendCoins(coinsAmount.getText().toString(),personalId);
+                try {
+                    sendCoins(coinsAmount.getText().toString(),personalId);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         });
-
-        //CreditHistoryList creditHistoryList = (CreditHistoryList) intnet.getSerializableExtra("creditHistoryList");
-        product = new Product("123", "iPhone", "phone");
-        productList.add(product);
-        productList.add(product);
-        productList.add(product);
-        productList.add(product);
-        productList.add(product);
-        productList.add(product);
-        productList.add(product);
-        productList.add(product);
-        productList.add(product);
-        productList.add(product);
-        productList.add(product);
-        productList.add(product);
-        productList.add(product);
-        productList.add(product);
-        productList.add(product);
-        productList.add(product);
-        productList.add(product);
-        productList.add(product);
-        productList.add(product);
-        productList.add(product);
-        productList.add(product);
-        productList.add(product);
-        productList.add(product);
-        productList.add(product);
-        productList.add(product);
-        productList.add(product);
-        productList.add(product);
-        productList.add(product);
-        productList.add(product);
-        productList.add(product);
-        productList.add(product);
-        productList.add(product);
-        productList.add(product);
-        productList.add(product);
-        productList.add(product);
-        productList.add(product);
-        productList.add(product);
-        productList.add(product);
 
         mProgressBar = new ProgressDialog(this);
 
@@ -99,19 +65,53 @@ public class OffersActivity extends AppCompatActivity {
 
     }
 
-    private void sendCoins(String coinsAmount,String personalId) {
+    private void sendCoins(String coinsAmount,String personalId) throws IOException, InterruptedException {
         UseCoinsInNextInvoice request = new UseCoinsInNextInvoice(coinsAmount,personalId);
         SetCoinsNumber setCoinsNumber = new SetCoinsNumber(request);
-        String response = setCoinsNumber.send();
-        if (response.equals("OK")){
+
+        setCoinsNumber.send();
             Toast.makeText(this, "SUCCESS", Toast.LENGTH_LONG).show();
-            return;
-        }else {
-            Toast.makeText(this, "Failed", Toast.LENGTH_LONG).show();
-            return;
-        }  
+            Thread.sleep(300);
+            getCoins(personalId);
+
     }
 
+    private void sendOrders(String coinsAmount,String productId,String personalId) throws IOException, InterruptedException {
+        UseCoinsInNextInvoice request = new UseCoinsInNextInvoice(coinsAmount,personalId);
+        SetCoinsNumber setCoinsNumber = new SetCoinsNumber(request);
+
+        setCoinsNumber.sendProduct(productId);
+        Toast.makeText(this, "SUCCESS", Toast.LENGTH_LONG).show();
+        Thread.sleep(300);
+        getCoins(personalId);
+    }
+    private void getCoins(String personalId) throws IOException {
+
+
+        My3CoinResponse my3CoinResponse = null;
+        if(null == personalId || personalId.isEmpty()) {
+            Toast.makeText(this, "Personal number cannot be empty", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        Get3CoinRequest get3CoinRequest = new Get3CoinRequest();
+        try {
+            my3CoinResponse =  get3CoinRequest.execute(personalId).get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        if(null!=my3CoinResponse){
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra("my3CoinResponse",my3CoinResponse);
+            intent.putExtra("personalId",personalId);
+            startActivity(intent);
+        } else {
+            Toast.makeText(this, "Please pay your invoice to get 3Coins.", Toast.LENGTH_LONG).show();
+        }
+        //return my3CoinResponse;
+    }
     public void startLoadData() {
 
         mProgressBar.setCancelable(false);
@@ -134,10 +134,8 @@ public class OffersActivity extends AppCompatActivity {
         smallTextSize = (int) getResources().getDimension(R.dimen.font_size_small);
         mediumTextSize = (int) getResources().getDimension(R.dimen.font_size_medium);
         */
-        ProductsOffersList productsOffersList = new ProductsOffersList(productList);
-        List<Product> products = productsOffersList.getProductList();
 
-        int rows = productsOffersList.getProductList().size();
+        int rows = productLists.getProductLists().size();
         getSupportActionBar().setTitle("Offers");
         TextView textSpacer = null;
 
@@ -145,9 +143,9 @@ public class OffersActivity extends AppCompatActivity {
 
         // -1 means heading row
         for(int i = -1; i < rows; i ++) {
-            Product row = null;
+            ProductList row = null;
             if (i > -1)
-                row = products.get(i);
+                row = productLists.getProductLists().get(i);
             else {
                 textSpacer = new TextView(this);
                 textSpacer.setText("");
@@ -170,6 +168,7 @@ public class OffersActivity extends AppCompatActivity {
                 tv.setText(String.valueOf(row.getRequiredCoins()));
                 tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
             }
+
 
             final TextView tv2 = new TextView(this);
             if (i == -1) {
@@ -271,14 +270,19 @@ public class OffersActivity extends AppCompatActivity {
 
 
             tr.addView(tv);
-            tr.addView(tv2);
             tr.addView(layCustomer);
             tr.addView(layOrder);
 
             tv4.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    sendCoins("1","21");
+                    try {
+                        sendOrders(tv.getText().toString(),tv2.getText().toString(),personalId);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             });
             if (i > -1) {

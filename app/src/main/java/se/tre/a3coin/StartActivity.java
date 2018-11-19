@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 
 import se.tre.a3coin.Domain.My3CoinResponse;
 import se.tre.a3coin.Service.Get3CoinRequest;
@@ -47,22 +48,20 @@ public class StartActivity extends AppCompatActivity {
         }
 
          Get3CoinRequest get3CoinRequest = new Get3CoinRequest();
-        /*try {
+        try {
             my3CoinResponse =  get3CoinRequest.execute(personalId).get();
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }*/
+        }
         if(null!=my3CoinResponse){
             Intent intent = new Intent(this, MainActivity.class);
             intent.putExtra("my3CoinResponse",my3CoinResponse);
+            intent.putExtra("personalId",personalId);
             startActivity(intent);
         } else {
             Toast.makeText(this, "Please pay your invoice to get 3Coins.", Toast.LENGTH_LONG).show();
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.putExtra("my3CoinResponse",my3CoinResponse);
-            startActivity(intent);
         }
         //return my3CoinResponse;
     }

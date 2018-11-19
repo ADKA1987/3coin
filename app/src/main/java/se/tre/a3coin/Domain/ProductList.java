@@ -2,12 +2,12 @@ package se.tre.a3coin.Domain;
 
 import java.io.Serializable;
 
-public class Product  implements Serializable {
+public class ProductList implements Serializable {
     private String requiredCoins;
     private String availabelProductId;
     private String productDescription;
 
-    public Product(String requiredCoins, String availabelProductId, String productDescription) {
+    public ProductList(String requiredCoins, String availabelProductId, String productDescription) {
         this.requiredCoins = requiredCoins;
         this.availabelProductId = availabelProductId;
         this.productDescription = productDescription;

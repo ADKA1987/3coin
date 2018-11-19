@@ -2,6 +2,11 @@ package se.tre.a3coin.Service;
 
 import android.os.AsyncTask;
 import android.util.Log;
+
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -11,15 +16,17 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Collection;
 import java.util.List;
 
-import se.tre.a3coin.Domain.Credit;
+import se.tre.a3coin.Domain.CreditHistoryList;
+import se.tre.a3coin.Domain.CreditHistoryResponse;
 import se.tre.a3coin.Domain.My3CoinResponse;
-import se.tre.a3coin.Domain.Product;
-import se.tre.a3coin.Domain.Usage;
+import se.tre.a3coin.Domain.ProductList;
+import se.tre.a3coin.Domain.ProductListResponse;
 
 public class Get3CoinRequest  extends AsyncTask<String, String , My3CoinResponse > {
-    private String url = "http://x13824azz.nextrel.tre.se:8123/3labs/3coins/getPsftInfo/se/consumer/198608160563";
+    private String url = "http://x13824azz.nextrel.tre.se:8123/3labs/3coins/getPsftInfo/se/consumer/";
     public Get3CoinRequest(){
 
     }
@@ -30,7 +37,7 @@ public class Get3CoinRequest  extends AsyncTask<String, String , My3CoinResponse
         My3CoinResponse my3CoinResponse = null;
         HttpURLConnection urlConnection = null;
         try {
-            regUrl = new URL(url);
+            regUrl = new URL(url+personalId[0]);
             urlConnection = (HttpURLConnection) regUrl.openConnection();
             urlConnection.setRequestMethod("GET");
             //Log.v("UrlConnection",  urlConnection.getContent().toString());
@@ -55,17 +62,37 @@ public class Get3CoinRequest  extends AsyncTask<String, String , My3CoinResponse
         return my3CoinResponse;
     }
 
-    private My3CoinResponse parsemy3CoinResponse(String responseString, String[] personalid) {
+    private My3CoinResponse parsemy3CoinResponse(String responseString, String[] personalid) throws IOException {
         My3CoinResponse my3CoinResponse= null;
         try {
 
             JSONObject jObj = new JSONObject(responseString);
             String coins = jObj.getString("available3Coins");
             String expiryDate = jObj.getString("expiryDate");
-           /* List<Credit> creditHistoryList = (List<Credit>) jObj.getJSONArray("creditHistoryList");
-            List<Usage> UsageList = (List<Usage>)  jObj.getJSONArray("usageList");
-            List<Product> productList = (List<Product>)  jObj.getJSONArray("productList");*/
-            my3CoinResponse = new My3CoinResponse(coins, expiryDate,personalid);
+            String creditHistoryList = jObj.getString("creditHistoryList");
+            String productList = jObj.getString("productList");
+
+            Gson gson = new Gson();
+            TypeToken<List<CreditHistoryList>> token = new TypeToken<List<CreditHistoryList>>(){};
+            Collection<CreditHistoryList> creditHistoryListArray = gson.fromJson(creditHistoryList, token.getType());
+
+            Gson gsonProducts = new Gson();
+            TypeToken<List<ProductList>> tokenProducts = new TypeToken<List<ProductList>>(){};
+            Collection<ProductList> productListArray = gsonProducts.fromJson(productList, tokenProducts.getType());
+
+
+            CreditHistoryResponse creditHistoryResponse = new CreditHistoryResponse ((List<CreditHistoryList>) creditHistoryListArray);
+            ProductListResponse productListResponse = new ProductListResponse((List<ProductList>) productListArray);
+
+            for(CreditHistoryList ch : creditHistoryListArray) {
+                Log.v("CreditHistoryList", " ch "+  ch );
+            }
+
+            for(ProductList pl : productListArray) {
+                Log.v("ProductList", " pl "+  pl );
+            }
+
+           my3CoinResponse = new My3CoinResponse(coins, creditHistoryResponse,productListResponse, expiryDate,personalid);
             Log.v("My3Coin", "available3Coins "+ coins + ", expiryDate "+ expiryDate);
         } catch (JSONException e) {
             Log.e("My3Coin", "unexpected JSON exception", e);

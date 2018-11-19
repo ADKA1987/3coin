@@ -6,71 +6,36 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import se.tre.a3coin.Domain.Credit;
 import se.tre.a3coin.Domain.CreditHistoryList;
-import se.tre.a3coin.Domain.My3CoinResponse;
+import se.tre.a3coin.Domain.CreditHistoryResponse;
 
 public class HistoryActivity extends AppCompatActivity {
     private TableLayout mTableLayout;
     ProgressDialog mProgressBar;
-    Credit credit,credit2;
-    List<Credit> creditList = new ArrayList<>();
+    CreditHistoryList creditHistoryList,creditHistoryList2;
+    CreditHistoryResponse creditHistoryResponse ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
         Intent intnet = getIntent();
 
-        //CreditHistoryList creditHistoryList = (CreditHistoryList) intnet.getSerializableExtra("creditHistoryList");
-        credit = new Credit("2973", "Sales", "1000", "2018-11-12", "3Coins", "2099-12-31");
-        credit2 = new Credit("2974", "Sales", "5000", "2018-11-12", "3Coins", "2099-12-31");
-        creditList.add(credit);
-        creditList.add(credit2);
-        creditList.add(credit2);
-        creditList.add(credit2);
-        creditList.add(credit2);
-        creditList.add(credit2);
-        creditList.add(credit2);
-        creditList.add(credit2);
-        creditList.add(credit2);
-        creditList.add(credit2);
-        creditList.add(credit2);
-        creditList.add(credit2);
-        creditList.add(credit2);
-        creditList.add(credit2);
-        creditList.add(credit2);
-        creditList.add(credit2);
-        creditList.add(credit2);
-        creditList.add(credit2);
-        creditList.add(credit2);
-        creditList.add(credit2);
-        creditList.add(credit2);
-        creditList.add(credit2);
-        creditList.add(credit2);
-        creditList.add(credit2);
-        creditList.add(credit2);
-        creditList.add(credit2);
-        creditList.add(credit2);
-        creditList.add(credit2);
-        creditList.add(credit2);
-        creditList.add(credit2);
+        creditHistoryResponse =  (CreditHistoryResponse) intnet.getSerializableExtra("creditHistoryList");
+        //creditHistoryList = new CreditHistoryList("2973", "Sales", "1000", "2018-11-12", "3Coins", "2099-12-31");
+        //creditHistoryList2 = new CreditHistoryList("2974", "Sales", "5000", "2018-11-12", "3Coins", "2099-12-31");
+       // creditHistoryListArray.add(creditHistoryList);
+        //creditHistoryListArray.add(creditHistoryList);
 
         mProgressBar = new ProgressDialog(this);
 
@@ -101,10 +66,10 @@ public class HistoryActivity extends AppCompatActivity {
         smallTextSize = (int) getResources().getDimension(R.dimen.font_size_small);
         mediumTextSize = (int) getResources().getDimension(R.dimen.font_size_medium);
         */
-        CreditHistoryList creditHistoryList = new CreditHistoryList(creditList);
-        List<Credit> credits = creditHistoryList.getListCredit();
 
-        int rows = creditHistoryList.getListCredit().size();
+        List<CreditHistoryList> credits =(List<CreditHistoryList>) creditHistoryResponse.getCreditHistoryLists();
+
+        int rows = credits.size();
         getSupportActionBar().setTitle("History");
         TextView textSpacer = null;
 
@@ -112,7 +77,7 @@ public class HistoryActivity extends AppCompatActivity {
 
         // -1 means heading row
         for(int i = -1; i < rows; i ++) {
-            Credit row = null;
+            CreditHistoryList row = null;
             if (i > -1)
                 row = credits.get(i);
             else {

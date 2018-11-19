@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:width="100dp"
             android:height="300dp"
-            android:text="Offeres" />
+            android:text="Offers" />
 
 
     </LinearLayout>
